@@ -1,0 +1,118 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Register Page {% endblock %}
+{% block css %}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .register-form {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .register-submit {
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+        }
+
+        .register-submit:hover {
+            background-color: #45a049;
+        }
+
+        .register-link {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+        .error-message, .success-message {
+            margin-top: 10px;  /* Added margin-top for messages */
+            display: none;
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        .success-message {
+            color: green;
+        }
+{% endblock %}
+
+{% block body %}
+    <form class="register-form" action="/login/addnewuser/" method="post">
+        {% csrf_token %}
+        User Name: <input class="register-input" type="text" name="uname" required />
+        <br>
+
+        Password: <input class="register-input" type="password" name="pw1" required />
+        <br>
+
+        Re Enter Password: <input class="register-input" type="password" name="pw2" required />
+        <br>
+
+        EMail: <input class="register-input" type="email" name="email" required />
+        <br>
+
+        Contact: <input class="register-input" type="text" name="contact" required />
+        <br>
+        <input class="register-submit" type="submit" value="Register" />
+        <a class="register-link" href="/login/">Existing User? Click here to login</a>
+         <br>
+        <div id="error-message" class="error-message">
+            {% if request.GET.error %}
+                {{ request.GET.error }}
+            {% else %}
+                Registration failed...
+            {% endif %}
+        </div>
+        <div id="success-message" class="success-message">
+            Registration successful! Redirecting...
+        </div>
+    </form>
+
+<script>
+
+        window.onload = function() {
+            // Check if there is an error parameter in the URL
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('error')) {
+                // Show error message
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.style.display = 'block';
+            }
+            else if (params.has('success')) {
+                // Show success message
+                const successMessage = document.getElementById('success-message');
+                successMessage.style.display = 'block';
+
+                // Hide message and redirect after 1 second
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                    window.location.href = '/'; // Redirect to the shop page
+                }, 1000);
+            }
+        };
+    </script>
+{% endblock %}

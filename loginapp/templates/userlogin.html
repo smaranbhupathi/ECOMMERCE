@@ -1,0 +1,139 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Login Page {% endblock %}
+
+{% block css %}
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+
+    .login-form {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .login-submit {
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+    }
+
+    .login-submit:hover {
+        background-color: #45a049;
+    }
+
+    .login-link {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .login-link:hover {
+        text-decoration: underline;
+    }
+
+    .login-buttons {
+        text-align: center;
+        margin-top: 20px;  /* Added margin-top */
+        margin-bottom: 20px;
+    }
+
+    .login-buttons button {
+        padding: 12px 24px;  /* Increased padding */
+        margin: 0 10px;
+        cursor: pointer;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .login-buttons button:hover {
+        background-color: #0056b3;
+    }
+
+    .error-message, .success-message {
+        margin-top: 10px;  /* Added margin-top for messages */
+        display: none;
+    }
+
+    .error-message {
+        color: red;
+    }
+
+    .success-message {
+        color: green;
+    }
+{% endblock %}
+
+{% block body %}
+    <div class="login-buttons">
+        <button onclick="redirectToUserLogin()">User Login</button>
+        <button onclick="redirectToAdminLogin()">Admin Login</button>
+    </div>
+
+    <form class="login-form" action="/login/validatelogin/" method="post">
+        {% csrf_token %}
+        User Name: <input class="login-input" type="text" name="uname" required />
+        <br>
+        Password: <input class="login-input" type="password" name="pw" required />
+        <br>
+        <input class="login-submit" type="submit" value="Login" />
+        <a class="login-link" href="/login/register/">New User? Click here to register</a>
+        <br>
+        <div id="error-message" class="error-message">
+            Login failed. Please check your credentials.
+        </div>
+        <div id="success-message" class="success-message">
+            Login successful! Redirecting...
+        </div>
+    </form>
+
+    <script>
+        function redirectToUserLogin() {
+            window.location.href = '/login';
+        }
+
+        function redirectToAdminLogin() {
+            window.location.href = '/login/admin';  // Update with the actual URL for admin login
+        }
+
+        window.onload = function() {
+            // Check if there is an error parameter in the URL
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('error')) {
+                // Show error message
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.style.display = 'block';
+            }
+            else if (params.has('success')) {
+                // Show success message
+                const successMessage = document.getElementById('success-message');
+                successMessage.style.display = 'block';
+
+                // Hide message and redirect after 1 second
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                    window.location.href = '/'; // Redirect to the shop page
+                }, 1000);
+            }
+        };
+    </script>
+{% endblock %}

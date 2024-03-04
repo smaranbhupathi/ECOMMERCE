@@ -1,0 +1,183 @@
+{% extends 'shop/basic.html' %}
+
+{% block title%} About Us{% endblock %}
+{% block css %}
+<style>
+    /* Custom CSS for the About Us page */
+    body {
+        background-color: #f5f5f5;
+    }
+
+    .jumbotron {
+        background-color: #6c757d;
+        color: #ffffff;
+    }
+
+    .jumbotron a {
+        color: #ffffff;
+    }
+
+    .founder-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .founder-card img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin-bottom: 15px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .founder-card h2 {
+        color: #007bff;
+        margin-bottom: 10px;
+    }
+
+    .founder-card p {
+        color: #6c757d;
+    }
+
+    /* Custom styles for the spaced layout */
+    .row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    /* Additional styles for the Contact Us section */
+    .container form {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .form-group label {
+        color: #007bff;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        background-color: #f8f9fa;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #218838;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<main role="main">
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-3">E-Commerce!</h1>
+            <p>E-Commerce Pvt Ltd. is an Indian electronic commerce company based in Bengaluru, India. Founded by Sachin Bansal and Binny Bansal in 2007, the company initially focused on book sales, before expanding into other product categories such as consumer electronics, fashion, and lifestyle products.
+                The service competes primarily with Amazon's Indian subsidiary, and the domestic rival Snapdeal.[5][6] as of March 2017, Flipkart held a 39.5% market share of India's e-commerce industry.[7] Flipkart is significantly dominant in the sale of apparel (a position that was bolstered by its acquisitions of Myntra and Jabong.com), and was described as being "neck and neck" with Amazon in the sale of electronics and mobile phones.[8] Flipkart also owns PhonePe, a mobile payments service based on the Unified Payments Interface (UPI).
+                In August 2018, U.S.-based retail chain Walmart acquired a 77% controlling stake in Flipkart for US$16 billion, valuing it at $22 billion.</p>
+<!--            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>-->
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Example row of columns -->
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Founder 1: Raghava -->
+                <div class="founder-card">
+                    <img src="/media/shop/images/raghava.png" alt="Raghava Image" class="img-fluid">
+                    <h2>Raghava</h2>
+                    <h4>Founder</h4>
+                    <!-- Additional information about Raghava -->
+                    <p>Placeholder for meaningful information about Raghava. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Founder 2: Smaran -->
+                <div class="founder-card">
+                    <img src="/media/shop/images/smaran.png" alt="Smaran Image" class="img-fluid">
+                    <h2>Smaran</h2>
+                    <h4>Co-founder</h4>
+                    <!-- Additional information about Smaran -->
+                    <p>Placeholder for meaningful information about Smaran. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- CEO: Yathin -->
+                <div class="founder-card">
+                    <img src="/media/shop/images/yathin.png" alt="Yathin Image" class="img-fluid">
+                    <h2>Yathin</h2>
+                    <h4>CEO</h4>
+                    <!-- Additional information about Yathin -->
+                    <p>Placeholder for meaningful information about Yathin. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- CTO: Prasanna -->
+                <div class="founder-card">
+                    <img src="/media/shop/images/prasanna.png" alt="Prasanna Image" class="img-fluid">
+                    <h2>Prasanna</h2>
+                    <h4>CTO</h4>
+                    <!-- Additional information about Prasanna -->
+                    <p>Placeholder for meaningful information about Prasanna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+    </div> <!-- /container -->
+
+</main>
+
+<div class="container">
+    <h3>Contact Us</h3>
+    <form action="/contact/" method="post">{% csrf_token %}
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Your Name">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter Your Email">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter Your Phone Number">
+        </div>
+        <div class="form-group">
+            <label for="desc">How May We Help You?</label>
+            <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+
+{% endblock %}

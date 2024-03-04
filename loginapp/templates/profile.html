@@ -1,0 +1,213 @@
+{% extends 'shop/basic.html' %}
+
+{% block css %}
+<style>
+/* Global styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+}
+
+.container-custom {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Header styles */
+.header-custom {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 1rem;
+    text-align: center;
+}
+
+.card-custom {
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 1rem 20rem 1rem 20rem;
+    display: flex;
+    flex-direction: column;
+    padding: 4rem 8rem 4rem 8rem;
+<!--    align-items: center; /* Center content horizontally */-->
+}
+
+
+
+
+.card-body-custom {
+    padding: 1rem;
+<!--    text-align: center; /* Center content vertically */-->
+}
+
+.card-title-custom {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-text-custom {
+    color: #6c757d;
+}
+
+/* profile form styles */
+.profile-form-container-custom {
+    max-width: 500px;
+    margin: 2rem auto;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+.form-label-custom {
+    font-weight: bold;
+}
+
+.form-control-custom {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.btn-primary-custom {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.btn-primary-custom:hover {
+    background-color: #0056b3;
+}
+
+/* Footer styles */
+.footer-custom {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 1rem;
+    text-align: center;
+}
+
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+
+    .btn-primary-custom, .btn-danger-custom {
+        flex-basis: 48%; /* Adjust the width based on your preference */
+    }
+
+    #addprofileBtn {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* Initially hide the profile form */
+  .profile-form-container-custom {
+    display: none;
+  }
+
+    .bio-row {
+    padding: 5px;
+}
+
+.bio-row p span {
+    width: 120px;
+    display: inline-block;
+}
+
+    .card-custom hr {
+    margin: 10px 0; /* Adjust the margin based on your preference */
+    border: none;
+    border-top: 1px solid #ccc; /* Define the line color */
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>profile</title>
+</head>
+<body>
+
+
+        <div class="card-custom mt-3">
+    <div class="row">
+        <div class="bio-row">
+            <strong><h4>Profile Details</h4></strong>
+        </div>
+    </div>
+    <hr> <!-- Add a line here -->
+
+    <div class="row">
+        <div class="bio-row">
+            <p><span>User Name  </span>{{ user.username }}</p>
+        </div>
+        <div class="bio-row">
+            <p><span>Email  </span>{{ user.email }}</p>
+        </div>
+        <div class="bio-row">
+            <p><span>Contact </span>{{ user.contact }}</p>
+        </div>
+    </div>
+</div>
+
+
+
+
+<button class="btn btn-success mt-3" id="addprofileBtn">Edit Profile</button>
+
+       <div class="profile-form-container-custom mt-3">
+        <form action="/login/profile/edit/" method="post">
+            {% csrf_token %}
+
+            <!-- Add your form fields here -->
+            <div class="mb-3">
+                <label for="email" class="form-label-custom">Email:</label>
+                <input type="text" class="form-control-custom" name="email" required>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label-custom">Phone:</label>
+                <input  class="form-control-custom" name="phone" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label-custom">Password:</label>
+                <input  class="form-control-custom" name="pw1" required>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary-custom all">Save profile</button>
+        </form>
+    </div>
+
+
+</body>
+</html>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var addprofileBtn = document.getElementById('addprofileBtn');
+      var profileFormContainer = document.querySelector('.profile-form-container-custom');
+
+      addprofileBtn.addEventListener('click', function() {
+        // Toggle the visibility of the form container
+        profileFormContainer.style.display = (profileFormContainer.style.display === 'none' || profileFormContainer.style.display === '') ? 'block' : 'none';
+      });
+    });
+  </script>
+{% endblock %}

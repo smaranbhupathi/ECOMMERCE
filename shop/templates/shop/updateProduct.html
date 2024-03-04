@@ -1,0 +1,113 @@
+{% extends 'shop/basicAdmin.html' %}
+
+{% block css %}
+<style>
+    /* Additional styles for the Add Order Update form */
+    .dashboard {
+        margin: 50px 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        /* Add left and right padding */
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .add-order-update-form {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: grid;
+        gap: 15px;
+        /* Add left and right padding */
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .add-order-update-form label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .add-order-update-form input,
+    .add-order-update-form textarea,
+    .add-order-update-form select {
+        width: calc(100% - 20px);
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        text-align: center;
+        color: #007bff;
+    }
+
+    .add-order-update-form button {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 20px; /* Adjusted padding for a wider button */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 10px auto; /* Center the button */
+        display: block; /* Make the button a block element for margin auto to work */
+    }
+    .success-message {
+        margin-top: 10px;  /* Added margin-top for messages */
+        display: none;
+    }
+
+    .success-message {
+        color: green;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="dashboard">
+    <h1>Add Order Update</h1>
+
+    <form class="add-order-update-form" method="post" action="/adminpage/updatecurrentStatus/">
+        {% csrf_token %}
+        <div id="success-message" class="success-message">
+                Updated Status successfully...
+        </div>
+        <label for="order_id">Order ID:</label>
+        <input type="number" name="order_id" required>
+
+        <br>
+
+        <label for="update_desc">Update Description:</label>
+        <textarea name="update_desc" rows="4" cols="50" required></textarea>
+
+        <br>
+
+        <button type="submit">Save</button>
+    </form>
+</div>
+<script>
+
+        window.onload = function() {
+            // Check if there is an error parameter in the URL
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('success')) {
+                // Show success message
+                const successMessage = document.getElementById('success-message');
+                successMessage.style.display = 'block';
+
+                // Hide message and redirect after 1 second
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                    window.location.href = '/adminpage/addProduct'; // Redirect to the shop page
+                }, 5000);
+            }
+        };
+    </script>
+{% endblock %}

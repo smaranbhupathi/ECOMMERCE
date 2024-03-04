@@ -1,0 +1,188 @@
+{% extends 'shop/basic.html' %}
+
+{% block css %}
+
+        .order-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .order-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .order-items {
+            margin-bottom: 10px;
+        }
+
+        .total {
+            font-weight: bold;
+        }
+
+        .shipped-address {
+            font-style: italic;
+        }
+
+       .rating-container {
+            display: inline-block;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .delivered {
+        color: green;
+        }
+
+        .star {
+            color: gray;
+            transition: color 0.3s ease;
+        }
+
+        .star.hovered, .star:hover {
+            color: gold;
+        }
+
+        .col {
+            color: gold;
+            padding: 0px;
+            transition: color 0.3s ease;
+        }
+
+.comment-form {
+    margin-top: 10px;
+}
+
+.comment-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+
+.comment-form button {
+    margin-top: 5px;
+    padding: 8px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comment-form button:hover {
+    background-color: #45a049;
+}
+}
+
+{% endblock %}
+
+
+{% block body %}
+{% if len == 0 %}
+    <h1 class="my-4 text-center">No orders placed! Happy shopping</h1>
+{% endif %}
+
+{% for order in orders %}
+<div class="order-container">
+    <div class="order-details">
+        <div>Ship To: {{ order.shipto }}</div>
+        <div>Order ID: {{ order.order_id }}</div>
+
+        <div class="delivered">Delivered: {{ order.timestamp }}</div>
+    </div>
+
+    <div class="order-items">
+        <p>Ordered Items:</p>
+        <ul>
+            {% for key, item_data in order.items_json.items %}
+                    {% with qty=item_data.0|floatformat item=item_data.1 price=item_data.2|floatformat:"2" %}
+                        <li>
+                            <img src="/media/{{item_data.3 }} " width="50" height="50">
+                            {{ qty }} x {{ item }} - ${{ price }}
+                            <form method="post" id="rating-form-{{ key }}" action="{% url 'add_rating' order.order_id key %}" onsubmit="submitRating(event, '{{ key }}')">
+                                {% csrf_token %}
+                                <!-- Your form fields here -->
+                                <label for="rating">Rate this product:</label>
+                                <div class="rating-container" data-product="{{ key }}">
+<!--                                    {{ item_data.4 }}-->
+                                    {% for _ in "12345" %}
+                                        {% if forloop.counter <= item_data.4 %}
+                                            <span class="col" data-rating="{{ forloop.counter }}" onclick="highlightAndSubmit(event, 'rating-form-{{ key }}')">&#9733;</span>
+                                        {% else %}
+                                            <span class="star" data-rating="{{ forloop.counter }}" onclick="highlightAndSubmit(event, 'rating-form-{{ key }}')">&#9733;</span>
+                                         {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <input type="hidden" name="rating" id="selected-rating-{{ key }}" required>
+                            </form>
+
+
+<!--                            <form method="post" id="comment-form-{{ key }}" onsubmit="submitComment(event, '{{ key }}')" action="{% url 'add_comment' order.order_id key %}" >-->
+                            <form method="post" id="comment-form-{{ key }}"  action="{% url 'add_comment' order.order_id key %}" >
+                                {% csrf_token %}
+                                <label for="login-input">Add a Comment:</label>
+<!--                                <input class="login-input" type="text" name="comment" />-->
+                                <textarea class="comment-input" name="comment" rows="4" cols="50"></textarea>
+                                <input class="login-submit" type="submit" value="Submit" />
+                            </form>
+                        </li>
+                    {% endwith %}
+                {% endfor %}
+        </ul>
+    </div>
+
+    <div class="total">
+        Total: ${{ order.amount }}
+    </div>
+
+    <div class="shipped-address">
+        Shipped Address: {{ order.address }}, {{ order.city }}, {{ order.state }} {{ order.zip_code }}
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+
+function highlightAndSubmit(event, formId) {
+    const productKey = event.currentTarget.parentElement.dataset.product;
+    console.log(productKey);
+    const selectedRating = event.target.dataset.rating;
+
+    const stars = document.querySelectorAll(`#${formId} .rating-container[data-product="${productKey}"] .star`);
+    let hoverDetected = false;
+
+    stars.forEach(star => {
+        const rating = star.dataset.rating;
+        const hovered = rating <= selectedRating;
+
+        star.classList.toggle('hovered', hovered);
+
+        // Detect if the current star is being hovered
+        if (event.target === star) {
+            hoverDetected = true;
+        }
+
+        // Highlight left stars up to the current hovered star
+        if (hoverDetected && rating <= selectedRating) {
+            star.classList.add('hovered');
+        }
+    });
+
+    document.getElementById(`selected-rating-${productKey}`).value = selectedRating;
+    console.log(formId);
+    document.getElementById(formId).submit();
+    // Uncomment this line if you want to submit the form when a star is clicked
+
+}
+
+</script>
+{% endblock %}

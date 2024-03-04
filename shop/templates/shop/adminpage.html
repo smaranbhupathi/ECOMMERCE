@@ -1,0 +1,60 @@
+{% extends 'shop/basicAdmin.html' %}
+
+{% block css %}
+
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .card h2 {
+            margin-bottom: 10px;
+        }
+
+        .card-item {
+            margin-bottom: 10px;
+        }
+    </style>
+
+{% endblock %}
+
+
+{% block body %}
+<body>
+    <div class="dashboard">
+        <h1>Welcome to the Admin Dashboard</h1>
+        <div>
+            <p>Total Customers {{ ship_from_count }}</p>
+            <p>Total Orders: {{ total_orders }}</p>
+            <p>Total Revenue: ${{ total_revenue }}</p>
+            <!-- Add more details or styling as needed -->
+        </div>
+    </div>
+    <!-- Add your JavaScript code here if needed -->
+</body>
+{% endblock %}
+
+
+{% block js %}
+ <script>
+
+    </script>
+{% endblock %}

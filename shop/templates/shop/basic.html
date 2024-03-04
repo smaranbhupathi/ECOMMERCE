@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+          crossorigin="anonymous">
+
+    <title>{% block title%} {% endblock %}</title>
+    <style>
+        .dropdown-menu{
+            position: absolute,
+            top: searchInput.offset().top + searchInput.outerHeight(),
+            width: searchInput.outerWidth(),
+         }
+
+         #searchResults.dropdown-menu {
+            position: absolute;
+            left: 665px; /* Set the right position as needed */
+            max-width: 300px; /* Set the maximum width of the results container */
+            background-color: #fff; /* Set background color as needed */
+            border: 1px solid #ccc; /* Add border for styling */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow for styling */
+            z-index: 1000; /* Set a higher z-index to make sure it appears above other elements */
+            /* Add other styles as needed */
+        }
+
+
+<!--        #profile.dropdown-menu {-->
+<!--            position: absolute;-->
+<!--            max-width: 100px; /* Set the maximum width of the results container */-->
+<!--            background-color: #fff; /* Set background color as needed */-->
+<!--            border: 1px solid #ccc; /* Add border for styling */-->
+<!--            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow for styling */-->
+<!--            z-index: 1000; /* Set a higher z-index to make sure it appears above other elements */-->
+<!--            /* Add other styles as needed */-->
+<!--        }-->
+
+        .form-inline.my-2.my-lg-0 {
+        margin: 0 auto; /* Add this line to center the form horizontally */
+        text-align: center; /* Add this line to center the form horizontally */
+    }
+ {% block css %} {% endblock %}
+    </style>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">E-Commerce</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item {% if request.path == '/' %}active{% endif %} ">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item {% if request.path == '/about/' %}active{% endif %} ">
+                <a class="nav-link" href="/about">About Us</a>
+            </li>
+
+            <li class="nav-item {% if request.path == '/tracker/' %}active{% endif %} ">
+                <a class="nav-link" href="/tracker">Tracker</a>
+            </li>
+
+            {% if request.session.username %}
+                <li class="nav-item {% if request.path == '/orders/' %}active{% endif %} ">
+                    <a class="nav-link" href="/orders">Orders</a>
+                </li>
+                <li class="nav-item {% if request.path == '/logout/' %}active{% endif %} ">
+                    <a class="nav-link" href="/logout">Logout ({{request.session.username}})</a>
+                </li>
+            {% else %}
+                <li class="nav-item {% if request.path == '/login/' %}active{% endif %} ">
+                    <a class="nav-link" href="/login">Login/SignUp</a>
+                </li>
+            {% endif %}
+        </ul>
+
+        <form method='get' action='/search/' class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search"
+                   id="search" onkeyup="getRecommendations()">
+            <div id="searchResults" class="dropdown-menu" style="display: none;"></div>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+        <!-- Inside the <body> tag, after the navigation bar -->
+<!--        <div class="container mt-3">-->
+<!--         {% if request.session.username %}-->
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="profileDropdown" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    Profile
+                </button>
+                <div class="dropdown-menu dropdown-menu-sm" id="profile" aria-labelledby="profileDropdown">
+                    <a class="dropdown-item" href="/login/profile/">Profile</a>
+                    <a class="dropdown-item" href="/profile/address/">Address</a>
+                    <a class="dropdown-item" href="/profile/wishlist/">Wish List</a>
+                    <a class="dropdown-item" href="/profile/recommendations/">Recommendations</a>
+                </div>
+            </div>
+<!--        {% endif %}-->
+<!--        </div>-->
+
+
+        <button type="button" class="btn btn-secondary mx-2" id="popcart" data-container="body" data-toggle="popover"
+                data-placement="bottom" data-html="true" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+            Cart(<span id="cart">0</span>)
+        </button>
+    </div>
+</nav>
+
+{% block body %} {% endblock %}
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+<script>
+
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+}
+cart = JSON.parse(localStorage.getItem('cart'));
+var sum1 = 0;
+for (var item in cart) {
+    sum1 = sum1 + cart[item][0];
+}
+document.getElementById('cart').innerHTML = sum1;
+
+
+function getRecommendations() {
+    var searchInput = $('#search').val();
+
+    $.ajax({
+    type: 'GET',
+    url: '/search-recommendations/',
+    data: { search_input: searchInput },
+    success: function (data) {
+        try {
+<!--            var recommendations = JSON.parse(data);-->
+<!--            displayRecommendations(recommendations);-->
+            displayRecommendations(data);
+
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            // Handle the error gracefully
+        }
+    },
+    error: function (error) {
+        console.error('AJAX error:', error);
+        // Handle the AJAX error gracefully
+    }
+    });
+
+}
+
+function displayRecommendations(data) {
+        var resultsDiv = document.getElementById('searchResults');
+     var searchInput = $('#search');
+
+        var recommendations = data;
+        console.log(data);
+        resultsDiv.innerHTML = "";
+        if (recommendations.length > 0) {
+            for (var i = 0; i < recommendations.length; i++) {
+                var suggestion = recommendations[i];
+                var suggestionElement = document.createElement('a');
+                suggestionElement.href = '/search/?search=' + suggestion; // Adjust the URL as needed
+                suggestionElement.classList.add('dropdown-item');
+                suggestionElement.textContent = suggestion;
+                suggestionElement.addEventListener('click', function () {
+                    document.getElementById('search').value = this.textContent;
+                    document.forms[0].submit(); // Submit the form on suggestion click
+                });
+                resultsDiv.appendChild(suggestionElement);
+            }
+            console.log(resultsDiv.innerHTML);
+
+            resultsDiv.style.display = 'block'; // Show the suggestions dropdown
+        } else {
+            resultsDiv.style.display = 'none'; // Hide the suggestions dropdown if no results
+        }
+    }
+
+// ... (other functions remain unchanged)
+
+$(document).on('click', function (event) {
+    console.log('Clicked:', event.target);
+        $('#searchResults').hide();
+});
+
+    $('.dropdown-toggle').dropdown();
+</script>
+
+    {% block js %}
+
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,219 @@
+{% extends 'shop/basic.html' %}
+
+{% block css %}
+<style>
+/* Global styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+}
+
+.container-custom {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+
+/* Header styles */
+.header-custom {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 1rem;
+    text-align: center;
+}
+
+.card-custom {
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 1rem 20rem 1rem 20rem;
+    padding:  2rem;
+    display: flex;
+    flex-direction: column;
+<!--    align-items: center; /* Center content horizontally */-->
+}
+
+.card-body-custom {
+    padding: 1rem;
+<!--    text-align: center; /* Center content vertically */-->
+}
+
+.card-title-custom {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-text-custom {
+    color: #6c757d;
+}
+
+/* Address form styles */
+.address-form-container-custom {
+    max-width: 500px;
+    margin: 2rem auto;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+.form-label-custom {
+    font-weight: bold;
+}
+
+.form-control-custom {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.btn-primary-custom {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.btn-primary-custom:hover {
+    background-color: #0056b3;
+}
+
+/* Footer styles */
+.footer-custom {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 1rem;
+    text-align: center;
+}
+
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+
+    .btn-primary-custom, .btn-danger-custom {
+        flex-basis: 48%; /* Adjust the width based on your preference */
+    }
+
+    .btn-danger-custom {
+        background-color: #dc3545;
+    }
+
+    .btn-danger-custom:hover {
+        background-color: #bb2c3b;
+    }
+
+    #addAddressBtn {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* Initially hide the address form */
+  .address-form-container-custom {
+    display: none;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addresses</title>
+</head>
+<body>
+
+    {% for address in addresses %}
+        <div class="card-custom mt-3">
+            <strong> <div class="card-body-custom"> </strong>
+                <h5 class="card-title-custom"> {{ address.shipto }}</h5>
+                    <h6 class="card-text-custom"> {{ address.address }}</h6>
+                    <h6 class="card-text-custom"> {{ address.city }} - {{ address.zip_code }}</h6>
+                    <h6 class="card-text-custom"> {{ address.state }}</h6>
+                    <h6 class="card-text-custom"> Phone: {{ address.phone }}</h6>
+                    <div class="button-container">
+                        <a href="/profile/address/delete/{{address.address_id}}/" class="btn btn-primary">Delete Address</a>
+                    </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <!-- Button to add a new address -->
+
+         <button class="btn btn-success mt-3" id="addAddressBtn">Add New Address</button>
+
+
+
+       <div class="address-form-container-custom mt-3">
+        <form action="/profile/address/add/" method="post">
+            {% csrf_token %}
+
+            <!-- Add your form fields here -->
+            <div class="mb-3">
+                <label for="shipto" class="form-label-custom">Ship To:</label>
+                <input type="text" class="form-control-custom" name="shipto" required>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label-custom">Email:</label>
+                <input type="email" class="form-control-custom" name="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label-custom">Address:</label>
+                <input type="text" class="form-control-custom" name="address" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="city" class="form-label-custom">City:</label>
+                <input type="text" class="form-control-custom" name="city" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="state" class="form-label-custom">State:</label>
+                <input type="text" class="form-control-custom" name="state" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="zip_code" class="form-label-custom">ZIP Code:</label>
+                <input type="text" class="form-control-custom" name="zip_code" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label-custom">Phone:</label>
+                <input type="text" class="form-control-custom" name="phone">
+            </div>
+
+            <!-- Add other form fields as needed -->
+
+            <button type="submit" class="btn btn-primary-custom all">Save Address</button>
+        </form>
+    </div>
+
+
+</body>
+</html>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var addAddressBtn = document.getElementById('addAddressBtn');
+      var addressFormContainer = document.querySelector('.address-form-container-custom');
+
+      addAddressBtn.addEventListener('click', function() {
+        // Toggle the visibility of the form container
+        addressFormContainer.style.display = (addressFormContainer.style.display === 'none' || addressFormContainer.style.display === '') ? 'block' : 'none';
+      });
+    });
+  </script>
+{% endblock %}

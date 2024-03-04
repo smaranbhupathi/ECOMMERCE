@@ -1,0 +1,232 @@
+{% extends 'shop/basic.html' %}
+
+{% block title%} {{product.product_name}} - My Awesome Cart{% endblock %}
+
+{% block css %}
+.star {
+    color: gray;  /* Default color for unrated stars */
+<!--    font-size: 20px;-->
+}
+
+.star.rated {
+    color: gold;  /* Color for rated stars */
+}
+
+#rating-container {
+    font-size: 24px;
+    margin-top: 10px;
+}
+
+#rating-container span {
+    cursor: pointer;
+}
+
+#rating-container .star {
+    margin-right: 5px;
+}
+
+#rating-container .rated {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.comment-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.comment {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.commenter {
+    font-weight: bold;
+}
+
+.comment-content {
+    margin-left: 10px;
+}
+
+.comment-date {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 0.8em;
+}
+
+.sort-comments {
+    margin-top: 10px;
+}
+
+.sort-comments label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.sort-comments select {
+    padding: 5px;
+}
+
+.comment-card {
+    margin-bottom: 15px;
+}
+
+
+.comment-card {
+    margin-bottom: 15px;
+}
+
+.comment-info {
+    font-size: 1em; /* Adjust the commenter's name text size */
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-info .commenter {
+    order: 1; /* Display commenter name on the left */
+}
+
+.comment-info .comment-date {
+    order: 2; /* Display date on the right */
+    font-size: 0.8em; /* Adjust the date text size */
+}
+
+.comment-content {
+    margin-top: 10px;
+}
+
+
+
+
+{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <img src="/media/{{product.image}}" width="233px" height="385px">
+            </div>
+            <div class="row mt-3">
+                <button class="btn btn-primary mx-3">Buy Now</button>
+                 <span id="divpr{{product.id}}" class="divpr">
+                     {{product.id}}
+                    <button id="pr{{product.id}}" class="btn btn-primary cart">Add To Cart</button>
+                </span>
+<!--                <button class="divpr btn btn-primary cart" id="pr{{product.id}}">Add To Cart</button>-->
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h5 id="namepr{{product.id}}">{{product.product_name}}</h5>
+            <p><b id="pricepr{{product.id}}" >{{product.price}} </b></p>
+            <p>{{product.desc}}</p>
+
+            <!-- Display average rating -->
+            <p>Average Rating: {{ average_rating|default:"Not yet rated"|floatformat:"1" }}</p>
+
+            <!-- Display stars for rating -->
+            <div id="rating-container">
+                {% for i in "12345" %}
+                    <span class="star {% if average_rating and i|add:"0" <= average_rating %}rated{% endif %}">&#9733;</span>
+                {% endfor %}
+            </div>
+
+            <div class="comment-container">
+                <h4>Comments</h4>
+                <div class="sort-comments">
+                    <label for="comment-sort">Sort by:</label>
+                    <select id="comment-sort">
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                    </select>
+                </div>
+
+                <div id="comments-container">
+                    {% for review in reviews %}
+                        {% if review.comment %}
+                            <div class="card comment-card">
+                                <div class="card-body">
+                                    <div class="comment-info">
+                                        <strong>{{ review.username }}</strong> {{ review.timestamp|date:"F d, Y" }}
+                                    </div>
+                                    <div class="comment-content">
+                                        {{ review.comment }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+}
+cart = JSON.parse(localStorage.getItem('cart'));
+
+    $('.divpr').on('click', 'button.cart', function() {
+    console.log("clicked");
+    var idstr = this.id.toString();
+    console.log(idstr);
+    console.log('name'+idstr);
+    name = document.getElementById('name'+idstr).innerHTML;
+    console.log(name);
+    name = document.getElementById('name'+idstr).innerHTML;
+    itemPrice = document.getElementById('price'+idstr).innerHTML
+    if (cart[idstr] != undefined) {
+    console.log("aaa");
+    console.log(cart[idstr]);
+        qty = cart[idstr][0] + 1;
+    }
+     else {
+        qty = 1;
+        cart[idstr] = [qty, name, itemPrice];
+        console.log(cart);
+    }
+
+    var sum2 = 0;
+    for (var item in cart) {
+        sum2 = sum2 + cart[item][0];
+    }
+    document.getElementById('cart').innerHTML = sum2;
+});
+
+document.getElementById('comment-sort').addEventListener('change', function() {
+    const selectedSort = this.value;
+    const commentsContainer = document.getElementById('comments-container');
+    const comments = Array.from(commentsContainer.querySelectorAll('.comment-card'));
+
+    comments.sort(function(a, b) {
+        const dateA = new Date(a.querySelector('.comment-info .comment-date').textContent);
+        const dateB = new Date(b.querySelector('.comment-info .comment-date').textContent);
+
+        if (selectedSort === 'newest') {
+            return dateB - dateA; // Sort in descending order for newest
+        } else if (selectedSort === 'oldest') {
+            return dateA - dateB; // Sort in ascending order for oldest
+        }
+
+        // Default: no sorting
+        return 0;
+    });
+
+    // Clear the current comments
+    commentsContainer.innerHTML = '';
+
+    // Append the sorted comments back to the container
+    comments.forEach(comment => {
+        commentsContainer.appendChild(comment);
+    });
+});
+</script>
+{% endblock %}

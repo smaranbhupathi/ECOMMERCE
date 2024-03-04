@@ -1,0 +1,131 @@
+{% extends 'shop/basic.html' %}
+{% block title %} Login Page {% endblock %}
+
+{% block css %}
+<style>
+       body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .registration-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .registration-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        .form-button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-button:hover {
+            background-color: #45a049;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+ {% endblock %}
+
+
+{% block body %}
+<div class="registration-container">
+        <div id="userRegistration" class="registration-form">
+            <form action="/addUser/" method="post">
+                {% csrf_token %}
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" id="username" name="username" class="form-input" required>
+
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" name="password" class="form-input" required>
+
+                <label for="confirm-password" class="form-label">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password" class="form-input" required>
+
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+
+                <label for="contact" class="form-label">Contact:</label>
+                <input type="text" id="contact" name="contact" class="form-input" required>
+
+                <button type="submit" class="form-button">Register as User</button>
+                <div class="form-label">Already have an account? <a href="/login">Sign In</a></div>
+
+            </form>
+        </div>
+
+        <div id="adminRegistration" class="registration-form" style="display: none;">
+            <form action="/addAdmin/" method="post">
+                 {% csrf_token %}
+                <label for="adminUsername" class="form-label">Admin Username:</label>
+                <input type="text" id="adminUsername" name="adminUsername" class="form-input" required>
+
+                <label for="adminPassword" class="form-label">Admin Password:</label>
+                <input type="password" id="adminPassword" name="adminPassword" class="form-input" required>
+
+                <label for="confirm-admin-password" class="form-label">Confirm Admin Password:</label>
+                <input type="password" id="confirm-admin-password" name="confirm-admin-password" class="form-input" required>
+
+                <label for="adminEmail" class="form-label">Admin Email:</label>
+                <input type="email" id="adminEmail" name="adminEmail" class="form-input" required>
+
+                <label for="adminContact" class="form-label">Admin Contact:</label>
+                <input type="text" id="adminContact" name="adminContact" class="form-input" required>
+
+                <button type="submit" class="form-button">Register as Admin</button>
+                <div class="form-label">Already have an account? <a href="/login">Sign In</a></div>
+            </form>
+        </div>
+
+        <div class="login-link">
+            <button onclick="toggleRegistrationForm('userRegistration')" class="form-button">User Login</button>
+            <button onclick="toggleRegistrationForm('adminRegistration')" class="form-button">Admin Login</button>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+ <script>
+        function toggleRegistrationForm(formId) {
+            document.getElementById('userRegistration').style.display = formId === 'userRegistration' ? 'block' : 'none';
+            document.getElementById('adminRegistration').style.display = formId === 'adminRegistration' ? 'block' : 'none';
+        }
+ </script>
+{% endblock %}

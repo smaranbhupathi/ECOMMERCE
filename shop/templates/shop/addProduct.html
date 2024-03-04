@@ -1,0 +1,125 @@
+{% extends 'shop/basicAdmin.html' %}
+
+{% block css %}
+<style>
+    /* Additional styles for the Add Products form */
+    .dashboard {
+        margin: 50px 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        /* Add left and right padding */
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .add-product-form {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: grid;
+        gap: 15px;
+        /* Add left and right padding */
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .add-product-form label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .add-product-form input,
+    .add-product-form textarea,
+    .add-product-form select {
+        width: calc(100% - 20px);
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        text-align: center;
+        color: #007bff;
+    }
+
+    .add-product-form button {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 20px; /* Adjusted padding for a wider button */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 10px auto; /* Center the button */
+        display: block; /* Make the button a block element for margin auto to work */
+    }
+    .success-message {
+        margin-top: 10px;  /* Added margin-top for messages */
+        display: none;
+    }
+
+    .success-message {
+        color: green;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+    <div class="dashboard">
+        <h1>Add Product</h1>
+        <!-- Add Products Form -->
+        <form class="add-product-form" method="post" action="/adminpage/addProduct/addProducttoDB" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div id="success-message" class="success-message">
+                Added Product successfully...
+            </div>
+            <label for="product_name">Product Name:</label>
+            <input type="text" id="product_name" name="product_name" required>
+
+            <label for="category">Category:</label>
+            <input type="text" id="category" name="category" required>
+
+            <label for="subcategory">Subcategory:</label>
+            <input type="text" id="subcategory" name="subcategory">
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" required>
+
+            <label for="desc">Description:</label>
+            <textarea id="desc" name="desc" rows="4" required></textarea>
+
+            <label for="pub_date">Publication Date:</label>
+            <input type="date" id="pub_date" name="pub_date" required>
+
+            <label for="image">Image:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script>
+
+        window.onload = function() {
+            // Check if there is an error parameter in the URL
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('success')) {
+                // Show success message
+                const successMessage = document.getElementById('success-message');
+                successMessage.style.display = 'block';
+
+                // Hide message and redirect after 1 second
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                    window.location.href = '/adminpage/addProduct'; // Redirect to the shop page
+                }, 5000);
+            }
+        };
+    </script>
+    <!-- ... Rest of your existing content ... -->
+{% endblock %}
